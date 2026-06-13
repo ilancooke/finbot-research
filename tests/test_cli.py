@@ -11,5 +11,10 @@ def test_cli_exposes_feature_label_diagnostics_subcommand() -> None:
     result = runner.invoke(app, ["--help"])
 
     assert result.exit_code == 0
+    assert "bucket-signal-diagnostics" in result.output
     assert "feature-label-diagnostics" in result.output
+    assert "price-strength-holding-period-simulation" in result.output
+    assert "price-strength-portfolio-simulation" in result.output
+    assert "price-strength-rebalance-feasibility" in result.output
+    assert "price-strength-scorecard-v0" in result.output
     assert "summarize-diagnostics" in result.output

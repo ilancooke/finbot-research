@@ -98,3 +98,259 @@ def feature_label_current_year_snapshot_path(data_root: Path | None = None) -> P
 
 def feature_label_current_year_snapshot_csv_path(data_root: Path | None = None) -> Path:
     return feature_label_diagnostics_dir(data_root) / "equity_price_signal_current_year_snapshot.csv"
+
+
+def bucket_signal_diagnostics_dir(data_root: Path | None = None) -> Path:
+    root = data_root or get_data_root()
+    return root / "research" / "bucket_signal_diagnostics"
+
+
+def bucket_signal_summary_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_signal_summary.parquet"
+
+
+def bucket_signal_summary_csv_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_signal_summary.csv"
+
+
+def bucket_candidate_rules_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_candidate_rules.parquet"
+
+
+def bucket_candidate_rules_csv_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_candidate_rules.csv"
+
+
+def bucket_candidate_rule_years_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_candidate_rule_years.parquet"
+
+
+def bucket_candidate_rule_years_csv_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_candidate_rule_years.csv"
+
+
+def bucket_candidate_rule_stability_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_candidate_rule_stability.parquet"
+
+
+def bucket_candidate_rule_stability_csv_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_candidate_rule_stability.csv"
+
+
+def bucket_signal_report_path(data_root: Path | None = None) -> Path:
+    return bucket_signal_diagnostics_dir(data_root) / "equity_bucket_signal_report.md"
+
+
+def price_strength_scorecard_dir(data_root: Path | None = None) -> Path:
+    root = data_root or get_data_root()
+    return root / "research" / "price_strength_scorecard_v0"
+
+
+def price_strength_scorecard_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0.parquet"
+
+
+def price_strength_scorecard_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0.csv"
+
+
+def price_strength_scorecard_summary_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0_summary.parquet"
+
+
+def price_strength_scorecard_summary_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0_summary.csv"
+
+
+def price_strength_scorecard_years_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0_years.parquet"
+
+
+def price_strength_scorecard_years_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0_years.csv"
+
+
+def price_strength_scorecard_stability_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0_stability.parquet"
+
+
+def price_strength_scorecard_stability_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0_stability.csv"
+
+
+def price_strength_scorecard_report_path(data_root: Path | None = None) -> Path:
+    return price_strength_scorecard_dir(data_root) / "equity_price_strength_scorecard_v0_report.md"
+
+
+def reference_tickers_path(data_root: Path | None = None) -> Path:
+    root = data_root or get_data_root()
+    return root / "reference" / "tickers.parquet"
+
+
+def price_strength_rebalance_feasibility_dir(data_root: Path | None = None) -> Path:
+    root = data_root or get_data_root()
+    return root / "research" / "price_strength_rebalance_feasibility"
+
+
+def price_strength_rebalance_bucket_counts_path(data_root: Path | None = None) -> Path:
+    return price_strength_rebalance_feasibility_dir(data_root) / "equity_price_strength_rebalance_bucket_counts.parquet"
+
+
+def price_strength_rebalance_bucket_counts_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_rebalance_feasibility_dir(data_root) / "equity_price_strength_rebalance_bucket_counts.csv"
+
+
+def price_strength_rebalance_bucket_count_summary_path(data_root: Path | None = None) -> Path:
+    return (
+        price_strength_rebalance_feasibility_dir(data_root)
+        / "equity_price_strength_rebalance_bucket_count_summary.parquet"
+    )
+
+
+def price_strength_rebalance_bucket_count_summary_csv_path(data_root: Path | None = None) -> Path:
+    return (
+        price_strength_rebalance_feasibility_dir(data_root)
+        / "equity_price_strength_rebalance_bucket_count_summary.csv"
+    )
+
+
+def price_strength_rebalance_sector_composition_path(data_root: Path | None = None) -> Path:
+    return (
+        price_strength_rebalance_feasibility_dir(data_root)
+        / "equity_price_strength_rebalance_sector_composition.parquet"
+    )
+
+
+def price_strength_rebalance_sector_composition_csv_path(data_root: Path | None = None) -> Path:
+    return (
+        price_strength_rebalance_feasibility_dir(data_root)
+        / "equity_price_strength_rebalance_sector_composition.csv"
+    )
+
+
+def price_strength_rebalance_sector_concentration_path(data_root: Path | None = None) -> Path:
+    return (
+        price_strength_rebalance_feasibility_dir(data_root)
+        / "equity_price_strength_rebalance_sector_concentration.parquet"
+    )
+
+
+def price_strength_rebalance_sector_concentration_csv_path(data_root: Path | None = None) -> Path:
+    return (
+        price_strength_rebalance_feasibility_dir(data_root)
+        / "equity_price_strength_rebalance_sector_concentration.csv"
+    )
+
+
+def price_strength_rebalance_turnover_path(data_root: Path | None = None) -> Path:
+    return price_strength_rebalance_feasibility_dir(data_root) / "equity_price_strength_rebalance_turnover.parquet"
+
+
+def price_strength_rebalance_turnover_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_rebalance_feasibility_dir(data_root) / "equity_price_strength_rebalance_turnover.csv"
+
+
+def price_strength_rebalance_feasibility_path(data_root: Path | None = None) -> Path:
+    return price_strength_rebalance_feasibility_dir(data_root) / "equity_price_strength_rebalance_feasibility.parquet"
+
+
+def price_strength_rebalance_feasibility_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_rebalance_feasibility_dir(data_root) / "equity_price_strength_rebalance_feasibility.csv"
+
+
+def price_strength_rebalance_feasibility_report_path(data_root: Path | None = None) -> Path:
+    return price_strength_rebalance_feasibility_dir(data_root) / "equity_price_strength_rebalance_feasibility_report.md"
+
+
+def price_strength_holding_period_dir(data_root: Path | None = None) -> Path:
+    root = data_root or get_data_root()
+    return root / "research" / "price_strength_holding_period_simulation"
+
+
+def price_strength_holding_period_rebalance_results_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_rebalance_results.parquet"
+
+
+def price_strength_holding_period_rebalance_results_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_rebalance_results.csv"
+
+
+def price_strength_holding_period_summary_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_summary.parquet"
+
+
+def price_strength_holding_period_summary_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_summary.csv"
+
+
+def price_strength_holding_period_sector_composition_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_sector_composition.parquet"
+
+
+def price_strength_holding_period_sector_composition_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_sector_composition.csv"
+
+
+def price_strength_holding_period_sector_concentration_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_sector_concentration.parquet"
+
+
+def price_strength_holding_period_sector_concentration_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_sector_concentration.csv"
+
+
+def price_strength_holding_period_turnover_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_turnover.parquet"
+
+
+def price_strength_holding_period_turnover_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_turnover.csv"
+
+
+def price_strength_holding_period_report_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_simulation_report.md"
+
+
+def price_strength_holding_period_metadata_path(data_root: Path | None = None) -> Path:
+    return price_strength_holding_period_dir(data_root) / "equity_price_strength_holding_period_simulation.metadata.json"
+
+
+def price_strength_portfolio_simulation_dir(data_root: Path | None = None) -> Path:
+    root = data_root or get_data_root()
+    return root / "research" / "price_strength_portfolio_simulation"
+
+
+def price_strength_portfolio_rebalance_results_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_rebalance_results.parquet"
+
+
+def price_strength_portfolio_rebalance_results_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_rebalance_results.csv"
+
+
+def price_strength_portfolio_summary_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_summary.parquet"
+
+
+def price_strength_portfolio_summary_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_summary.csv"
+
+
+def price_strength_portfolio_constituents_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_constituents.parquet"
+
+
+def price_strength_portfolio_sector_weights_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_sector_weights.parquet"
+
+
+def price_strength_portfolio_sector_weights_csv_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_sector_weights.csv"
+
+
+def price_strength_portfolio_report_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_simulation_report.md"
+
+
+def price_strength_portfolio_metadata_path(data_root: Path | None = None) -> Path:
+    return price_strength_portfolio_simulation_dir(data_root) / "equity_price_strength_portfolio_simulation.metadata.json"
