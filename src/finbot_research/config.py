@@ -55,6 +55,16 @@ def labels_path(data_root: Path | None = None) -> Path:
     return root / "labels" / "equity_forward_return_labels.parquet"
 
 
+def fundamental_features_path(data_root: Path | None = None) -> Path:
+    root = data_root or get_data_root()
+    return root / "features" / "equity_fundamental_features.parquet"
+
+
+def fundamental_research_v0_dir(data_root: Path | None = None) -> Path:
+    root = data_root or get_data_root()
+    return root / "research" / "fundamental_research_v0"
+
+
 def feature_label_diagnostics_dir(data_root: Path | None = None) -> Path:
     root = data_root or get_data_root()
     return root / "research" / "feature_label_diagnostics"

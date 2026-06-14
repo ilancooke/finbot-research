@@ -13,6 +13,7 @@ def test_cli_exposes_feature_label_diagnostics_subcommand() -> None:
     assert result.exit_code == 0
     assert "bucket-signal-diagnostics" in result.output
     assert "feature-label-diagnostics" in result.output
+    assert "fundamental-research-v0" in result.output
     assert "price-strength-equity-curve-backtest" in result.output
     assert "price-strength-equity-curve-robustness" in result.output
     assert "price-strength-horizon-sensitivity" in result.output

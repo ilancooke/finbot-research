@@ -18,9 +18,17 @@ Promoted daily signal snapshots, including `data/signals/price_strength/scorecar
 
 - `features/equity_price_features.parquet`
 - `features/equity_relative_features.parquet`
+- `features/equity_fundamental_features.parquet`
 - `labels/equity_forward_return_labels.parquet`
 
 The primary regression label is `forward_63d_sector_relative_return`. The primary classification label is `forward_63d_top_30pct_sector_flag`.
+
+Fundamental features are stored at filing-effective grain (`symbol,effective_date`), not daily
+grain. Daily-grain research panels should attach them with the shared
+`finbot_features.asof.asof_merge_fundamentals` helper, which uses the latest row where
+`effective_date <= date` and adds `fundamental_effective_date` plus
+`fundamental_data_age_days`. This keeps point-in-time alignment consistent across alpha research,
+backtests, and later model-training workflows.
 
 ## Outputs
 
@@ -147,6 +155,33 @@ The primary regression label is `forward_63d_sector_relative_return`. The primar
 - `research/price_strength_scorecard_v1/equity_price_strength_scorecard_v1_evidence_summary.csv`
 - `research/price_strength_scorecard_v1/equity_price_strength_scorecard_v1_report.md`
 - `research/price_strength_scorecard_v1/equity_price_strength_scorecard_v1.metadata.json`
+- `research/fundamental_research_v0/01_fundamental_feature_coverage.parquet`
+- `research/fundamental_research_v0/02_fundamental_feature_label_diagnostics.parquet`
+- `research/fundamental_research_v0/02b_fundamental_feature_direction_audit.parquet`
+- `research/fundamental_research_v0/fundamental_feature_diagnostics_report.md`
+- `research/fundamental_research_v0/03_fundamental_bucket_summary.parquet`
+- `research/fundamental_research_v0/04_fundamental_bucket_years.parquet`
+- `research/fundamental_research_v0/05_fundamental_bucket_stability.parquet`
+- `research/fundamental_research_v0/fundamental_bucket_diagnostics_report.md`
+- `research/fundamental_research_v0/06_fundamental_candidate_rules.parquet`
+- `research/fundamental_research_v0/07_fundamental_candidate_rule_years.parquet`
+- `research/fundamental_research_v0/08_fundamental_candidate_rule_stability.parquet`
+- `research/fundamental_research_v0/fundamental_candidate_rules_report.md`
+- `research/fundamental_research_v0/09_fundamental_scorecard_v0.parquet`
+- `research/fundamental_research_v0/10_fundamental_scorecard_v0_current.parquet`
+- `research/fundamental_research_v0/11_fundamental_scorecard_v0_summary.parquet`
+- `research/fundamental_research_v0/12_fundamental_scorecard_v0_stability.parquet`
+- `research/fundamental_research_v0/12b_fundamental_scorecard_behavior_summary.parquet`
+- `research/fundamental_research_v0/12c_fundamental_scorecard_relabeling_recommendation.parquet`
+- `research/fundamental_research_v0/fundamental_scorecard_v0_report.md`
+- `research/fundamental_research_v0/13_fundamental_rebalance_feasibility.parquet`
+- `research/fundamental_research_v0/14_fundamental_holding_period_summary.parquet`
+- `research/fundamental_research_v0/15_fundamental_holding_period_turnover.parquet`
+- `research/fundamental_research_v0/fundamental_feasibility_and_holding_period_report.md`
+- `research/fundamental_research_v0/16_fundamental_robustness_summary.parquet`
+- `research/fundamental_research_v0/17_fundamental_scorecard_v1_recommendation.parquet`
+- `research/fundamental_research_v0/18_fundamental_scorecard_v0_1_current.parquet`
+- `research/fundamental_research_v0/fundamental_scorecard_v1_recommendation_report.md`
 
 The diagnostics parquet contains one table with multiple `metric_type` values:
 
@@ -234,6 +269,12 @@ finbot-research summarize-diagnostics --include-partial-current-year-in-stabilit
 
 The Markdown report is intended to guide future price-based scorecard research. PDF output and chart generation are intentionally deferred until the report format stabilizes.
 
+Run the filing-effective fundamentals research workflow:
+
+```bash
+finbot-research fundamental-research-v0
+```
+
 Show CLI help:
 
 ```bash
@@ -241,6 +282,44 @@ finbot-research --help
 ```
 
 Rebuild `finbot-catalog` after creating or materially changing research outputs so downstream tools can discover them.
+
+## fundamental-research-v0
+
+`finbot-research fundamental-research-v0` runs a research-only fundamentals workflow over filing-effective accounting features. It is meant to decide whether fundamental buckets and simple scorecard labels are worth promoting into future feature engineering or cross-diagnostics with price-strength v1. It does not generate production signals, train models, build dashboard views, ingest provider data, construct portfolios, or make trading recommendations.
+
+Inputs:
+
+- `features/equity_fundamental_features.parquet`
+- `labels/equity_forward_return_labels.parquet`
+- `reference/tickers.parquet`, for sector and industry context when available
+
+The workflow treats fundamentals as point-in-time filing-effective events. To keep local research memory bounded and capture mid-month filing changes, v0 keeps the research panel at `symbol,effective_date` grain and joins forward labels where `label.date == effective_date`. This evaluates the return path after newly effective accounting information without expanding every filing-effective row across the full daily label history.
+
+Bucket, candidate-rule, scorecard, feasibility, and holding-period comparisons use eligible-universe baselines, not self-baselines. Filing-event diagnostics compare each group against all eligible `symbol,effective_date` rows for the same horizon. Rebalance diagnostics compare each group against all eligible rows on the same rebalance date for the same horizon. Forward-return labels are already sector-relative, but the baseline remains the eligible universe unless a report explicitly says otherwise.
+
+Outputs are written under `research/fundamental_research_v0/`. This workflow intentionally differs from the existing price-strength commands: parquet files are the only canonical machine-readable tables, Markdown files are the human-readable reports, filenames are numbered in research order, and the command does not write CSV convenience copies or metadata JSON sidecars. Every Markdown report includes an `Output File Guide` section that points to the backing parquet files for deeper inspection.
+
+The workflow stages are:
+
+- `01` to `02b`: feature coverage, feature/label diagnostics, and feature direction audit, including non-null coverage, yearly availability, staleness, correlations, strong-versus-weak spreads, and direction consistency.
+- `03` to `05`: quality, growth, per-share/valuation-proxy, cash-flow-quality, balance-sheet, and staleness bucket diagnostics.
+- `06` to `08`: candidate-rule diagnostics for hypotheses such as `high_quality_growth`, `cashflow_supported_growth`, `levered_growth_risk`, `fundamental_deterioration`, and `fundamental_trap`.
+- `09` to `12c`: scorecard v0 rows, current snapshot, summary, stability diagnostics, behavior summary, and explicit relabeling recommendation.
+- `13` to `15`: monthly and quarterly rebalance feasibility, holding-period outcome summaries, and turnover.
+- `16` to `18`: robustness summary, v1-readiness recommendation, and current v0.1 dimension snapshot. Current expected v0 behavior is `v1_ready=false` with next stage `fundamental_scorecard_v0_1_review`; `12c_fundamental_scorecard_relabeling_recommendation.parquet` must be reviewed before any v1 freeze.
+
+Higher-is-worse metrics are handled explicitly. Leverage, liabilities, accruals, capital intensity, share dilution, and staleness are interpreted as riskier when values are higher; quality, profitability, cash generation, and growth metrics are generally interpreted as stronger when values are higher.
+
+Downside-aware summaries include `avg_forward_return_vs_baseline`, `median_forward_return_vs_baseline`, `top_30pct_rate_vs_baseline`, `bottom_30pct_rate_vs_baseline`, `behavior_label`, `behavior_confidence`, and `interpretation_notes`. Behavior labels include `tail_driven_upside`, `defensive_low_downside`, `downside_risk`, `stable_negative`, `neutral_like`, `data_quality_flag`, and `sparse_unreliable`.
+
+The v0.1 relabeling output deliberately avoids one composite fundamentals score. It separates:
+
+- `fundamental_quality_score_v0_1`: accounting quality/defensiveness, where positive values indicate stronger quality and negative values indicate weaker quality.
+- `fundamental_opportunity_score_v0_1`: rebound or speculative upside opportunity, separate from quality.
+- `fundamental_risk_label_v0_1`: categorical risk interpretation such as `lower_downside`, `high_downside_tail_risk`, `high_dispersion_rebound`, or `leverage_risk_mixed`.
+- `fundamental_data_quality_flag_v0_1`: true only for observations that should be treated as data-quality flags rather than alpha evidence.
+
+Fundamentals v1 remains not ready until the v0.1 dimensional policy has been reviewed.
 
 ## bucket-signal-diagnostics
 

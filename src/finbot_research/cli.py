@@ -7,6 +7,8 @@ from finbot_research.bucket_signal_diagnostics import terminal_summary as bucket
 from finbot_research.config import get_data_root
 from finbot_research.diagnostic_summary import build_diagnostic_summary, terminal_summary
 from finbot_research.feature_label_diagnostics import build_feature_label_diagnostics
+from finbot_research.fundamental_research_v0 import build_fundamental_research_v0
+from finbot_research.fundamental_research_v0 import terminal_summary as fundamental_terminal_summary
 from finbot_research.price_strength_scorecard import build_price_strength_scorecard
 from finbot_research.price_strength_scorecard import terminal_summary as price_strength_terminal_summary
 from finbot_research.price_strength_scorecard_v1 import build_price_strength_scorecard_v1
@@ -75,6 +77,18 @@ def bucket_signal_diagnostics_command() -> None:
     data_root = get_data_root()
     paths, summary = build_bucket_signal_diagnostics(data_root)
     typer.echo(bucket_terminal_summary(paths, summary))
+
+
+@app.command("fundamental-research-v0")
+def fundamental_research_v0_command() -> None:
+    """Run the research-only fundamentals workflow v0."""
+
+    data_root = get_data_root()
+    paths, summary = build_fundamental_research_v0(
+        data_root,
+        progress=lambda message: typer.echo(f"[fundamental-research-v0] {message}"),
+    )
+    typer.echo(fundamental_terminal_summary(paths, summary))
 
 
 @app.command("price-strength-scorecard-v0")
